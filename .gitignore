@@ -1,0 +1,27 @@
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Compiled binaries
+*.exe
+*.test
+*.out
+bin/
+dist/
+
+# Coverage results
+coverage/
+coverage.out
+coverage.html
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
