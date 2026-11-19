@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/whokashmiri/rel_ayforge/internal/config"
+	"github.com/whokashmiri/rel_ayforge/internal/httpserver"
 )
 
 func main() {
@@ -21,12 +24,12 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("load configuration: %w", err)
 	}
-	fmt.Println("Configuration loaded successfully")
-	fmt.Println("HTTP address:", cfg.HTTPAddr)
-	fmt.Println("Read timeout:", cfg.HTTPReadTimeout)
-	fmt.Println("Write timeout:", cfg.HTTPWriteTimeout)
-	fmt.Println("Shutdown timeout:", cfg.HTTPShutdownTimeout)
-
-	fmt.Println("RelayForge API initialized successfully")
+	server := httpserver.New(cfg)
+	fmt.Println("RelayForge listening on", cfg.HTTPAddr)
+	if err := server.ListenAndServe(); err != nil {
+		if !errors.Is(err, http.ErrServerClosed) {
+			return fmt.Errorf("start HTTP server : %w", err)
+		}
+	}
 	return nil
 }
