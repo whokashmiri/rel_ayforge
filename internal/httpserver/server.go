@@ -11,7 +11,7 @@ import (
 	"github.com/whokashmiri/rel_ayforge/internal/middleware"
 )
 
-func New(cfg config.Config, logger *slog.Logger) *http.Server {
+func New(cfg config.Config, logger *slog.Logger, tenantHandler *handler.TenantHandler) *http.Server {
 	router := chi.NewRouter()
 
 	router.Use(middleware.RequestID)
@@ -19,6 +19,9 @@ func New(cfg config.Config, logger *slog.Logger) *http.Server {
 
 	router.Get("/health", handler.Health)
 	router.Get("/ready", handler.Ready)
+
+	router.Post("/api/v1/tenants", tenantHandler.Create)
+	router.Get("/api/v1/tenants/{id}", tenantHandler.GetByID)
 	server := &http.Server{
 		Addr:              cfg.HTTPAddr,
 		Handler:           router,

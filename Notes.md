@@ -1,10 +1,9 @@
 Go module and go.mod contain - Collection of Go packages managed as single unit , provides dependency management
- and versioning of Project
- go.mod contains -  module name/path Go version , required Deps
+and versioning of Project
+go.mod contains - module name/path Go version , required Deps
 
- main belong cmd/api ? - main package represents an executable application
- cmd/api - clearly identifies the application entry point, separates app startup from reusable business logic
-
+main belong cmd/api ? - main package represents an executable application
+cmd/api - clearly identifies the application entry point, separates app startup from reusable business logic
 
 os.GetEnv = return a empty string
 os.LookupEnv = Return both the value and a Boolean indicating whether the value exists
@@ -26,7 +25,6 @@ json.Encoder(w) create a JSON Encoder that directly write to HTTP response write
 
 configure timeouts? without it, slow or unresponsive connections can consume server for too long
 
-
 context.Context carries request-scoped info , cancellation signals and deadlines through function calls
 
 regexp.MustCompile - compiles regex and panics if the expression is valid
@@ -35,10 +33,13 @@ in struct where the values are without a name it is called struct embedding
 
 Higher order function - when a function return another function
 
-
-A single pgx.Conn is not safe for unrestricted  use - A connection pool manages multiple reusable
+A single pgx.Conn is not safe for unrestricted use - A connection pool manages multiple reusable
 and allows concurrent requests to acquire connections safely
 
 ============================DATABASE========================================
 Why does Connect() accept a context
 -if application startup is cancelled, operations using the context can stop instead of continuing unnecessarily.
+
+.Scan - it copies the returned column values into Go variables
+
+sentinel error? - s a specific error value used to represent a known condition.

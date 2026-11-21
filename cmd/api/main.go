@@ -11,7 +11,10 @@ import (
 
 	"github.com/whokashmiri/rel_ayforge/internal/config"
 	"github.com/whokashmiri/rel_ayforge/internal/database"
+	"github.com/whokashmiri/rel_ayforge/internal/handler"
 	"github.com/whokashmiri/rel_ayforge/internal/httpserver"
+	"github.com/whokashmiri/rel_ayforge/internal/repository"
+	"github.com/whokashmiri/rel_ayforge/internal/service"
 )
 
 func main() {
@@ -43,7 +46,16 @@ func run() error {
 	defer db.Close()
 	logger.Info("PostgreSQL connection established")
 
-	server := httpserver.New(cfg, logger)
+	// Construct the repository using the PostgreSQL pool.
+	tenantRepo := repository.NewTenantRepository(db)
+
+	// Construct the service using the repository.
+	tenantService := service.NewTenantService(tenantRepo)
+
+	// Construct the HTTP handler using the service.
+	tenantHandler := handler.NewTenantHandler(tenantService)
+
+	server := httpserver.New(cfg, logger, tenantHandler)
 	fmt.Println("RelayForge listening on", cfg.HTTPAddr)
 	if err := server.ListenAndServe(); err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
