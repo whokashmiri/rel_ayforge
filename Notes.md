@@ -17,3 +17,12 @@ json.Encoder(w) create a JSON Encoder that directly write to HTTP response write
 .encode(data) coverts the Go Value to json and write it (returns error - discards the error)
 
 configure timeouts? without it, slow or unresponsive connections can consume server for too long
+
+
+context.Context carries request-scoped info , cancellation signals and deadlines through function calls
+
+regexp.MustCompile - compiles regex and panics if the expression is valid
+
+in struct where the values are without a name it is called struct embedding
+
+Higher order function - when a function return another function
