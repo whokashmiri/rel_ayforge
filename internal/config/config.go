@@ -12,11 +12,13 @@ type Config struct {
 	HTTPReadTimeout     time.Duration
 	HTTPWriteTimeout    time.Duration
 	HTTPShutdownTimeout time.Duration
+	DatabaseURL         string
 }
 
 func Load() (Config, error) {
 	cfg := Config{
-		HTTPAddr: getEnv("HTTP_Addr", ":8080"),
+		HTTPAddr:    getEnv("HTTP_Addr", ":8080"),
+		DatabaseURL: os.Getenv("DATABASE_URL"),
 	}
 	var err error
 	cfg.HTTPReadTimeout, err = parseDuration(
@@ -66,6 +68,7 @@ func parseDuration(key, fallback string) (time.Duration, error) {
 	if duration <= 0 {
 		return 0, fmt.Errorf("%s must be greater then zero", key)
 	}
+
 	return duration, nil
 }
 
@@ -84,6 +87,9 @@ func (cfg Config) Validate() error {
 	}
 	if cfg.HTTPShutdownTimeout <= 0 {
 		return fmt.Errorf("HTTP_SHUTDOWN_TIMEOUT must be positive")
+	}
+	if cfg.DatabaseURL == "" {
+		return fmt.Errorf("DATABASE_URL is required")
 	}
 	return nil
 }

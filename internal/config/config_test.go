@@ -11,6 +11,7 @@ func TestLoadDefaults(t *testing.T) {
 	t.Setenv("HTTP_READ_TIMEOUT", "10s")
 	t.Setenv("HTTP_WRITE_TIMEOUT", "15s")
 	t.Setenv("HTTP_SHUTDOWN_TIMEOUT", "10s")
+	t.Setenv("DATABASE_URL", "postgres://test:test@localhost:5432/test")
 
 	cfg, err := Load()
 	if err != nil {

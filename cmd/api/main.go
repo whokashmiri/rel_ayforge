@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/whokashmiri/rel_ayforge/internal/config"
+	"github.com/whokashmiri/rel_ayforge/internal/database"
 	"github.com/whokashmiri/rel_ayforge/internal/httpserver"
 )
 
@@ -29,6 +32,17 @@ func run() error {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	}))
+
+	dbCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	db, err := database.Connect(dbCtx, cfg.DatabaseURL)
+	if err != nil {
+		return fmt.Errorf("initialize database : %w", err)
+	}
+	defer db.Close()
+	logger.Info("PostgreSQL connection established")
+
 	server := httpserver.New(cfg, logger)
 	fmt.Println("RelayForge listening on", cfg.HTTPAddr)
 	if err := server.ListenAndServe(); err != nil {
